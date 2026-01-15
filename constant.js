@@ -60,4 +60,5 @@ export const SYNC_FILES_ENDPOINT = `${SYNC_BASE_URL}${SYNC_FILES_PATH}`;
 export const SYNC_DATASET_ENDPOINT = `${SYNC_BASE_URL}${SYNC_DATASET_PATH}`;
 
 export const START_FROM_DELTA_TIMESTAMP = process.env.DCR_START_FROM_DELTA_TIMESTAMP;
-export const DELTA_FILE_FOLDER = process.env.DCR_DELTA_FILE_FOLDER || "/tmp/";
+export const TEMP_FILE_FOLDER = process.env.DCR_TEMP_FILE_FOLDER || "/tmp/";
+export const SUBJECTS_FILE_FOLDER = `${TEMP_FILE_FOLDER}/subjects/`;
