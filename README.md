@@ -18,7 +18,7 @@ harvester-consumer-service:
             DCR_SYNC_BASE_URL: https://lokaalbeslist-harvester-1.s.redhost.be/
             DCR_SYNC_FILES_PATH: /sync/besluiten/files
             DCR_SYNC_DATASET_SUBJECT: http://data.lblod.info/datasets/delta-producer/dumps/lblod-harvester/BesluitenCacheGraphDump
-            TARGET_GRAPH: "http://mu.semte.ch/graphs/public"
+            LANDING_GRAPH: "http://mu.semte.ch/graphs/public"
             HTTP_MAX_QUERY_SIZE_BYTES: 120000
             DCR_BATCH_SIZE: 2000
             HIGH_LOAD_DATABASE_ENDPOINT: http://triplestore:8890/sparql
