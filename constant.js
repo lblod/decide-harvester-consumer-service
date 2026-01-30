@@ -36,7 +36,7 @@ export const LANDING_GRAPH =
   process.env.LANDING_GRAPH || "http://mu.semte.ch/graphs/oslo-decisions";
 
 export const PUBLISHER_URI =
-  process.env.PUBLISHER_URI || "http://data.lblod.info/services/decide-consumer-service";
+  process.env.PUBLISHER_URI || "http://data.lblod.info/services/decide-harvester-consumer-service";
 
 export const BATCH_SIZE = parseInt(process.env.DCR_BATCH_SIZE) || 100;
 
