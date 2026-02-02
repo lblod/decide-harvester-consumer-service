@@ -1,4 +1,6 @@
-export const TASK_CONSUME = "http://lblod.data.gift/id/jobs/concept/TaskOperation/decide-consumer";
+export const OPERATION_URI =
+  process.env.OPERATION_URI ||
+  "http://lblod.data.gift/id/jobs/concept/TaskOperation/decide-consumer";
 export const TYPE_INITIAL_SYNC = "http://mu.semte.ch/vocabularies/ext/decide-consumer/initial-sync";
 export const TYPE_DELTA_FILES = "http://mu.semte.ch/vocabularies/ext/decide-consumer/delta";
 
