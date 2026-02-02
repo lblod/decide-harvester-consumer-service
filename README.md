@@ -14,13 +14,13 @@ Add the following to your docker-compose file:
 harvester-consumer-service:
   image: lblod/poc-decide-harvester-consumer-service
   environment:
-            DCR_START_FROM_DELTA_TIMESTAMP: 2025-09-01T00:00:00
-            DCR_SYNC_BASE_URL: https://lokaalbeslist-harvester-1.s.redhost.be/
-            DCR_SYNC_FILES_PATH: /sync/besluiten/files
-            DCR_SYNC_DATASET_SUBJECT: http://data.lblod.info/datasets/delta-producer/dumps/lblod-harvester/BesluitenCacheGraphDump
+            START_FROM_DELTA_TIMESTAMP: 2025-09-01T00:00:00
+            SYNC_BASE_URL: https://lokaalbeslist-harvester-1.s.redhost.be/
+            SYNC_FILES_PATH: /sync/besluiten/files
+            SYNC_DATASET_SUBJECT: http://data.lblod.info/datasets/delta-producer/dumps/lblod-harvester/BesluitenCacheGraphDump
             LANDING_GRAPH: "http://mu.semte.ch/graphs/oslo-decisions"
             HTTP_MAX_QUERY_SIZE_BYTES: 120000
-            DCR_BATCH_SIZE: 2000
+            BATCH_SIZE: 2000
             HIGH_LOAD_DATABASE_ENDPOINT: http://triplestore:8890/sparql
    links:
     - database:database
