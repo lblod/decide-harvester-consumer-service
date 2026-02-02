@@ -1,4 +1,4 @@
-# harvesting consumer decide service
+# Decide harvester consumer service
 
 This service aims to handle delta consumer events (dumps, delta file).
 
