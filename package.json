@@ -1,7 +1,6 @@
 {
-    "name": "poc-decide-harvester-consumer-service",
-    "version": "0.1.6",
-    "description": "Customizable consumer service to synchronise data from a producer stack",
+    "name": "decide-harvester-consumer-service",
+    "version": "1.0.0",
     "type": "module",
     "main": "app.js",
     "scripts": {
@@ -9,18 +8,18 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/lblod/poc-decide-harvester-consumer-service.git"
+        "url": "git+https://github.com/lblod/decide-harvester-consumer-service.git"
     },
     "author": "info@redpencil.io",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/lblod/poc-decide-harvester-consumer-service/issues"
+        "url": "https://github.com/lblod/decide-harvester-consumer-service/issues"
     },
-    "homepage": "https://github.com/lblod/poc-decide-harvester-consumer-service#readme",
+    "homepage": "https://github.com/lblod/decide-harvester-consumer-service#readme",
     "dependencies": {
-        "@lblod/mu-auth-sudo": "0.6.2",
-        "fs-extra": "^9.0.1",
-        "n3": "^1.26.0",
-        "node-fetch": "^2.6.1"
+        "@lblod/mu-auth-sudo": "^1.1.0",
+        "fs-extra": "^11.3.3",
+        "n3": "^2.0.1",
+        "node-fetch": "^3.3.2"
     }
 }
