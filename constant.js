@@ -1,4 +1,6 @@
-export const TASK_CONSUME = "http://lblod.data.gift/id/jobs/concept/TaskOperation/decide-consumer";
+export const OPERATION_URI =
+  process.env.OPERATION_URI ||
+  "http://lblod.data.gift/id/jobs/concept/TaskOperation/decide-consumer";
 export const TYPE_INITIAL_SYNC = "http://mu.semte.ch/vocabularies/ext/decide-consumer/initial-sync";
 export const TYPE_DELTA_FILES = "http://mu.semte.ch/vocabularies/ext/decide-consumer/delta";
 
@@ -32,32 +34,31 @@ export const PREFIXES = `
 
 export const HIGH_LOAD_DATABASE_ENDPOINT =
   process.env.HIGH_LOAD_DATABASE_ENDPOINT || "http://database:8890/sparql";
-export const TARGET_GRAPH = process.env.TARGET_GRAPH || "http://mu.semte.ch/graphs/public";
+export const LANDING_GRAPH =
+  process.env.LANDING_GRAPH || "http://mu.semte.ch/graphs/oslo-decisions";
 
 export const PUBLISHER_URI =
-  process.env.PUBLISHER_URI || "http://data.lblod.info/services/decide-consumer-service";
+  process.env.PUBLISHER_URI || "http://data.lblod.info/services/decide-harvester-consumer-service";
 
-export const DEFAULT_GRAPH = process.env.DEFAULT_GRAPH || "http://mu.semte.ch/graphs/harvesting";
-
-export const BATCH_SIZE = parseInt(process.env.DCR_BATCH_SIZE) || 100;
+export const BATCH_SIZE = parseInt(process.env.BATCH_SIZE) || 100;
 
 // delta consumer related
 
-export const DUMPFILE_FOLDER = process.env.DCR_DUMPFILE_FOLDER || "consumer/deltas";
-if (!process.env.DCR_SYNC_BASE_URL) throw `Expected 'DCR_SYNC_BASE_URL' to be provided.`;
-export const SYNC_BASE_URL = process.env.DCR_SYNC_BASE_URL;
-export const SYNC_FILES_PATH = process.env.DCR_SYNC_FILES_PATH || "/sync/files";
-export const GET_FILE_PATH = process.env.DCR_GET_FILE_PATH || "/files/:id";
-export const DOWNLOAD_FILE_PATH = process.env.DCR_DOWNLOAD_FILE_PATH || GET_FILE_PATH + "/download";
+export const DUMPFILE_FOLDER = process.env.DUMPFILE_FOLDER || "consumer/deltas";
+if (!process.env.SYNC_BASE_URL) throw `Expected 'SYNC_BASE_URL' to be provided.`;
+export const SYNC_BASE_URL = process.env.SYNC_BASE_URL;
+export const SYNC_FILES_PATH = process.env.SYNC_FILES_PATH || "/sync/files";
+export const GET_FILE_PATH = process.env.GET_FILE_PATH || "/files/:id";
+export const DOWNLOAD_FILE_PATH = process.env.DOWNLOAD_FILE_PATH || GET_FILE_PATH + "/download";
 export const DOWNLOAD_FILE_ENDPOINT = `${SYNC_BASE_URL}${DOWNLOAD_FILE_PATH}`;
-export const SYNC_DATASET_PATH = process.env.DCR_SYNC_DATASET_PATH || "/datasets";
-if (!process.env.DCR_SYNC_DATASET_SUBJECT)
-  throw `Expected 'DCR_SYNC_DATASET_SUBJECT' to be provided by default.`;
-export const SYNC_DATASET_SUBJECT = process.env.DCR_SYNC_DATASET_SUBJECT;
+export const SYNC_DATASET_PATH = process.env.SYNC_DATASET_PATH || "/datasets";
+if (!process.env.SYNC_DATASET_SUBJECT)
+  throw `Expected 'SYNC_DATASET_SUBJECT' to be provided by default.`;
+export const SYNC_DATASET_SUBJECT = process.env.SYNC_DATASET_SUBJECT;
 
 export const GET_FILE_ENDPOINT = `${SYNC_BASE_URL}${GET_FILE_PATH}`;
 export const SYNC_FILES_ENDPOINT = `${SYNC_BASE_URL}${SYNC_FILES_PATH}`;
 export const SYNC_DATASET_ENDPOINT = `${SYNC_BASE_URL}${SYNC_DATASET_PATH}`;
 
-export const START_FROM_DELTA_TIMESTAMP = process.env.DCR_START_FROM_DELTA_TIMESTAMP;
-export const DELTA_FILE_FOLDER = process.env.DCR_DELTA_FILE_FOLDER || "/tmp/";
+export const START_FROM_DELTA_TIMESTAMP = process.env.START_FROM_DELTA_TIMESTAMP;
+export const DELTA_FILE_FOLDER = process.env.DELTA_FILE_FOLDER || "/tmp/";
