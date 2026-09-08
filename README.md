@@ -3,11 +3,11 @@
 ## About
 This service consumes Decide harvester tasks and ingests data from a remote producer stack. It reacts to `task:Task` deltas: when a task becomes `adms:status = scheduled`, the service loads the task and its input containers, groups them by sync type (initial sync or delta sync), and ingests the corresponding dump or delta files into the `LANDING_GRAPH`.
 
-A task can have multiple `task:inputContainer`s, one per bestuurseenheid (`ext:hasResource`). Each sync type is only executed **once per task**, regardless of how many bestuurseenheden request it, but a **result container is created per bestuurseenheid**. Initial sync result containers carry `ext:hasResource` and **do not** carry a result graph. Delta sync result containers carry both `ext:hasResource` and `task:hasGraph`, pointing at a **temporary result graph** shared by all bestuurseenheden in that sync.
+A task can have multiple `task:inputContainer`s, one per bestuurseenheid (`task:hasResource`). Each sync type is only executed **once per task**, regardless of how many bestuurseenheden request it, but a **result container is created per bestuurseenheid**. Initial sync result containers carry `task:hasResource` and **do not** carry a result graph. Delta sync result containers carry both `task:hasResource` and `task:hasGraph`, pointing at a **temporary result graph** shared by all bestuurseenheden in that sync.
 
 ## How it works
 - A delta notification marks a task as `scheduled`.
-- The service loads the task and its input containers, each of which points to a remote data object (task type: `initial-sync` or `delta`) and a bestuurseenheid (`ext:hasResource`).
+- The service loads the task and its input containers, each of which points to a remote data object (task type: `initial-sync` or `delta`) and a bestuurseenheid (`task:hasResource`).
 - The input containers are grouped by task type. If a task has containers of both types, both flows below run once, independently.
 - `SYNC_BASE_URL` may list multiple producer stacks (comma-separated). Both flows below
   iterate every configured server, in order, and land everything in the same
@@ -21,13 +21,13 @@ A task can have multiple `task:inputContainer`s, one per bestuurseenheid (`ext:h
     previous initial sync already ran).
   - Otherwise, for each server: download the latest dump distribution, stream-parse and
     ingest all triples into `LANDING_GRAPH`.
-  - Create one result container per bestuurseenheid, carrying `ext:hasResource`. No result graph is recorded.
+  - Create one result container per bestuurseenheid, carrying `task:hasResource`. No result graph is recorded.
 - Delta sync (runs once per configured server, if any input container is of this type):
   - Fetch unconsumed delta files since the latest timestamp from every server, merge and
     sort them chronologically.
   - Apply deletes + inserts to `LANDING_GRAPH`.
   - Also write inserts into a single new temporary result graph, shared across all servers and bestuurseenheden in this sync.
-  - Create one result container per bestuurseenheid, carrying `ext:hasResource` and linking to that temporary result graph via `task:hasGraph`.
+  - Create one result container per bestuurseenheid, carrying `task:hasResource` and linking to that temporary result graph via `task:hasGraph`.
 
 ## Usage
 
