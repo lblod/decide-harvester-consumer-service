@@ -46,19 +46,22 @@ export const BATCH_SIZE = parseInt(process.env.BATCH_SIZE) || 100;
 
 export const DUMPFILE_FOLDER = process.env.DUMPFILE_FOLDER || "consumer/deltas";
 if (!process.env.SYNC_BASE_URL) throw `Expected 'SYNC_BASE_URL' to be provided.`;
-export const SYNC_BASE_URL = process.env.SYNC_BASE_URL;
+export const SYNC_BASE_URLS = process.env.SYNC_BASE_URL.split(",")
+  .map((url) => url.trim())
+  .filter(Boolean);
+if (!SYNC_BASE_URLS.length) throw `Expected 'SYNC_BASE_URL' to contain at least one URL.`;
 export const SYNC_FILES_PATH = process.env.SYNC_FILES_PATH || "/sync/files";
 export const GET_FILE_PATH = process.env.GET_FILE_PATH || "/files/:id";
 export const DOWNLOAD_FILE_PATH = process.env.DOWNLOAD_FILE_PATH || GET_FILE_PATH + "/download";
-export const DOWNLOAD_FILE_ENDPOINT = `${SYNC_BASE_URL}${DOWNLOAD_FILE_PATH}`;
 export const SYNC_DATASET_PATH = process.env.SYNC_DATASET_PATH || "/datasets";
 if (!process.env.SYNC_DATASET_SUBJECT)
   throw `Expected 'SYNC_DATASET_SUBJECT' to be provided by default.`;
 export const SYNC_DATASET_SUBJECT = process.env.SYNC_DATASET_SUBJECT;
 
-export const GET_FILE_ENDPOINT = `${SYNC_BASE_URL}${GET_FILE_PATH}`;
-export const SYNC_FILES_ENDPOINT = `${SYNC_BASE_URL}${SYNC_FILES_PATH}`;
-export const SYNC_DATASET_ENDPOINT = `${SYNC_BASE_URL}${SYNC_DATASET_PATH}`;
+export const downloadFileEndpoint = (baseUrl) => `${baseUrl}${DOWNLOAD_FILE_PATH}`;
+export const getFileEndpoint = (baseUrl) => `${baseUrl}${GET_FILE_PATH}`;
+export const syncFilesEndpoint = (baseUrl) => `${baseUrl}${SYNC_FILES_PATH}`;
+export const syncDatasetEndpoint = (baseUrl) => `${baseUrl}${SYNC_DATASET_PATH}`;
 
 export const START_FROM_DELTA_TIMESTAMP = process.env.START_FROM_DELTA_TIMESTAMP;
 export const DELTA_FILE_FOLDER = process.env.DELTA_FILE_FOLDER || "/tmp/";

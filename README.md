@@ -9,14 +9,24 @@ A task can have multiple `task:inputContainer`s, one per bestuurseenheid (`ext:h
 - A delta notification marks a task as `scheduled`.
 - The service loads the task and its input containers, each of which points to a remote data object (task type: `initial-sync` or `delta`) and a bestuurseenheid (`ext:hasResource`).
 - The input containers are grouped by task type. If a task has containers of both types, both flows below run once, independently.
-- Initial sync (runs once, if any input container is of this type):
-  - If `LANDING_GRAPH` already has data, skip ingestion (assume a previous initial sync already ran).
-  - Otherwise, download the latest dump distribution, stream-parse and ingest all triples into `LANDING_GRAPH`.
+- `SYNC_BASE_URL` may list multiple producer stacks (comma-separated). Both flows below
+  iterate every configured server, in order, and land everything in the same
+  `LANDING_GRAPH` (and, for delta, the same shared temp result graph) — the service does
+  not track which server any given triple came from. All other sync-related env vars
+  (`SYNC_FILES_PATH`, `SYNC_DATASET_PATH`, `GET_FILE_PATH`, `DOWNLOAD_FILE_PATH`,
+  `SYNC_DATASET_SUBJECT`) apply identically to every server. A failure on any one server
+  fails the whole task.
+- Initial sync (runs once per configured server, if any input container is of this type):
+  - If `LANDING_GRAPH` already has data, skip ingestion for every server (assume a
+    previous initial sync already ran).
+  - Otherwise, for each server: download the latest dump distribution, stream-parse and
+    ingest all triples into `LANDING_GRAPH`.
   - Create one result container per bestuurseenheid, carrying `ext:hasResource`. No result graph is recorded.
-- Delta sync (runs once, if any input container is of this type):
-  - Fetch unconsumed delta files since the latest timestamp.
+- Delta sync (runs once per configured server, if any input container is of this type):
+  - Fetch unconsumed delta files since the latest timestamp from every server, merge and
+    sort them chronologically.
   - Apply deletes + inserts to `LANDING_GRAPH`.
-  - Also write inserts into a single new temporary result graph, shared across all bestuurseenheden in this sync.
+  - Also write inserts into a single new temporary result graph, shared across all servers and bestuurseenheden in this sync.
   - Create one result container per bestuurseenheid, carrying `ext:hasResource` and linking to that temporary result graph via `task:hasGraph`.
 
 ## Usage
@@ -27,7 +37,7 @@ Add the following to your docker-compose file:
 harvester-consumer-service:
   image: lblod/decide-harvester-consumer-service
   environment:
-    SYNC_BASE_URL: https://lokaalbeslist-harvester-1.s.redhost.be/
+    SYNC_BASE_URL: https://lokaalbeslist-harvester-1.s.redhost.be/,https://lokaalbeslist-harvester-2.s.redhost.be/
     SYNC_FILES_PATH: /sync/besluiten/files
     SYNC_DATASET_SUBJECT: http://data.lblod.info/datasets/delta-producer/dumps/lblod-harvester/BesluitenCacheGraphDump
     LANDING_GRAPH: "http://mu.semte.ch/graphs/oslo-decisions"
@@ -68,7 +78,7 @@ Add the delta rule:
 | ------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | `HIGH_LOAD_DATABASE_ENDPOINT`   | SPARQL endpoint used for reads/writes of data (i.e. non-task data). | `http://database:8890/sparql`                                          |
 | `LANDING_GRAPH`                 | Graph where full dumps and deltas are ingested.                     | `http://mu.semte.ch/graphs/oslo-decisions`                             |
-| `SYNC_BASE_URL`                 | Base URL of the remote harvester producer.                          | unset (required)                                                       |
+| `SYNC_BASE_URL`                 | Base URL of the remote harvester producer. Accepts a comma-separated list of URLs to sync from multiple producers; all other sync env vars apply to every URL. | unset (required) |
 | `SYNC_FILES_PATH`               | Path used to fetch delta files.                                     | `/sync/files`                                                          |
 | `SYNC_DATASET_SUBJECT`          | Dataset subject used to select the latest dump.                     | unset (required)                                                       |
 | `START_FROM_DELTA_TIMESTAMP`    | If set, deltas are fetched starting from this timestamp.            | unset (optional)                                                       |
@@ -78,5 +88,6 @@ Add the delta rule:
 
 ## Notes
 - This service is intended to run inside a harvester stack.
-- A task can have multiple input containers, one per bestuurseenheid; each sync type still runs only once per task.
+- A task can have multiple input containers, one per bestuurseenheid; each sync type still runs only once per task (per configured server).
+- `SYNC_BASE_URL` can list multiple servers; all are synced into the same graph(s) without tracking origin, and any single server failing fails the whole task.
 - Initial sync result containers do not record a result graph; delta result containers do.
