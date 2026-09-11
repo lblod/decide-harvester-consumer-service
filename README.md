@@ -18,7 +18,8 @@ A task can have multiple `task:inputContainer`s, one per bestuurseenheid (`task:
   fails the whole task.
 - Initial sync (runs once per configured server, if any input container is of this type):
   - If `LANDING_GRAPH` already has data, skip ingestion for every server (assume a
-    previous initial sync already ran).
+    previous initial sync already ran) — unless `ALWAYS_INGEST_INITIAL_SYNC` is set,
+    in which case this check is skipped and ingestion always runs.
   - Otherwise, for each server: download the latest dump distribution, stream-parse and
     ingest all triples into `LANDING_GRAPH`.
   - Create one result container per bestuurseenheid, carrying `task:hasResource`. No result graph is recorded.
@@ -85,6 +86,7 @@ Add the delta rule:
 | `HTTP_MAX_QUERY_SIZE_BYTES`     | Max SPARQL query size used by batching logic.                       | `60000`                                                                |
 | `BATCH_SIZE`                    | Batch size for streaming insert/delete operations.                  | `100`                                                                  |
 | `OPERATION_URI`                 | Only tasks with `task:operation` set to this URI are handled.       | `http://lblod.data.gift/id/jobs/concept/TaskOperation/decide-consumer` |
+| `ALWAYS_INGEST_INITIAL_SYNC`    | If truthy (`true`/`1`/`yes`/`on`, case-insensitive), always run initial sync ingestion even if `LANDING_GRAPH` already has data. | `false` |
 
 ## Notes
 - This service is intended to run inside a harvester stack.
